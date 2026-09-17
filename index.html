@@ -116,7 +116,20 @@
     <span id="historyStatus" class="history-note">操作履歴はありません</span>
   </div>
 
-  <div class="grid">
+  <section class="card" style="margin:20px 0">
+<h2>📡 OBSと同期</h2>
+<p>このiPhoneの数値を配信画面へ送ります。ページを開き直したら同期を開始してください。</p>
+<button id="syncStart" type="button">現在の数値で同期を開始</button>
+<p id="syncStatus" role="status">未接続：計算内容はこの端末に保存されます</p>
+<div id="obsLinkArea" hidden>
+<label for="obsUrl">OBSの「ブラウザ」に設定するURL</label>
+<input id="obsUrl" readonly style="width:100%;font-size:12px">
+<label for="obsView">OBSに表示するもの</label>
+<select id="obsView"><option value="all">ゲージとパネル</option><option value="gauge">キルゲージのみ（900×170）</option><option value="panels">パネルのみ（650×600）</option></select>
+<button id="copyObsUrl" type="button">OBS用URLをコピー</button>
+<p class="note">同期済みを確認してから17LIVEへ切り替えてください。操作はこの端末・同じブラウザで行ってください。</p>
+</div></section>
+<div class="grid">
     <section class="card">
       <h2>🎮 17LIVE キルチャレ計算</h2>
       <p class="note" style="margin-top:-6px">
@@ -410,6 +423,7 @@ function setupHistoryListeners(){
 function saveData(){
   const data = getState();
   localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  window.dispatchEvent(new Event('kill-state-saved'));
 }
 
 function loadData(){
@@ -455,19 +469,25 @@ function calculate(){
 }
 
 function addGiftBC(amount){
+  commitPendingEdit();
+  pushHistory(getState());
   totalBC += Math.max(0, parseInt(amount)||0);
   saveData();
   calculate();
+  calculateParty();
 }
 
 function addGiftQuantity(unitBC, inputId){
   const input = document.getElementById(inputId);
   const qty = Math.max(0, parseInt(input.value)||0);
   if(qty <= 0) return;
+  commitPendingEdit();
+  pushHistory(getState());
 
   totalBC += unitBC * qty;
   saveData();
   calculate();
+  calculateParty();
 
   input.value = 1;
 }
@@ -480,6 +500,7 @@ function addBP(){
   document.getElementById("bp").value=0;
   saveData();
   calculate();
+  calculateParty();
 }
 
 function calculateParty(){
@@ -555,5 +576,7 @@ calculateParty();
 renderPanels();
 updateHistoryButtons();
 </script>
+<script src="firebase-config.js"></script>
+<script src="sync.js"></script>
 </body>
 </html>
