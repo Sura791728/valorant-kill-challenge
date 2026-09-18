@@ -9,9 +9,13 @@
 .board{max-width:870px}.gauge{height:96px;padding:8px;border:5px solid white;border-radius:60px;box-shadow:0 0 0 2px #f3b8d3;background:#ffe8f3;position:relative;overflow:hidden}
 .track{height:100%;background:#fffafd;border-radius:40px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#faaaCE,#ee80b1);transition:width .25s ease}
 .gauge-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding:0 30px;font-size:34px;gap:10px;text-shadow:2px 2px white,-2px -2px white,2px -2px white,-2px 2px white;font-variant-numeric:tabular-nums}
-.panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px;max-width:620px}
-.panel{padding:18px 12px;text-align:center;border:4px solid white;border-radius:22px;background:linear-gradient(135deg,rgba(255,234,246,.96),rgba(232,207,255,.95));color:#8853ad;box-shadow:0 0 0 2px #e6b9e8}
-.panel-name{font-size:24px}.panel-value{font-size:25px}.panel-value b{font-size:64px;line-height:1.2;color:#ad48bc;font-variant-numeric:tabular-nums}.panel:last-child{grid-column:1/-1}
+.panels{margin-top:22px;width:100%;max-width:600px;line-height:0}
+.panel-art{display:block;width:100%;height:auto;overflow:hidden}
+.panel-piece{fill:#e6baf0;stroke:#9455b5;stroke-width:10;stroke-linejoin:round}
+.panel-label{fill:white;stroke:#8f54ab;stroke-width:4;paint-order:stroke;stroke-linejoin:round;font-size:20px;text-anchor:middle}
+.panel-count{fill:#22102c;font-size:43px;text-anchor:middle;stroke:none;font-variant-numeric:tabular-nums}
+.panel-goal{fill:#81449f;font-size:20px;text-anchor:middle}
+body[data-view="panels"]{padding:0}body[data-view="panels"] .board{max-width:none}body[data-view="panels"] .panels{max-width:none}
 #notice{font-size:16px;color:#8b3058;background:#fff1f8;border-radius:10px;padding:8px;margin:12px 0 0;max-width:620px}#notice:empty{display:none}
 body[data-view="gauge"] .panels{display:none}body[data-view="panels"] .gauge{display:none}body[data-view="panels"] .panels{margin-top:0}
 </style>
@@ -21,13 +25,7 @@ body[data-view="gauge"] .panels{display:none}body[data-view="panels"] .gauge{dis
 <div class="track"><div class="fill" id="gaugeFill"></div></div>
 <div class="gauge-label">キル <span id="converted">—</span> / <span id="quota">—</span></div>
 </div>
-<div class="panels">
-<div class="panel"><div class="panel-name">フルエール</div><div class="panel-value"><b id="p0">—</b> /100</div></div>
-<div class="panel"><div class="panel-name">ゲーム好きな人</div><div class="panel-value"><b id="p1">—</b> /50</div></div>
-<div class="panel"><div class="panel-name">ランダム イベギフ小</div><div class="panel-value"><b id="p2">—</b> /500</div></div>
-<div class="panel"><div class="panel-name">ランダム イベギフ中</div><div class="panel-value"><b id="p3">—</b> /150</div></div>
-<div class="panel"><div class="panel-name">ミッションスターベイビー</div><div class="panel-value"><b id="p4">—</b> /500</div></div>
-</div>
+<div class="panels"><svg class="panel-art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 780" aria-label="イラストを隠す9枚のパネル"><g id="panel0"><polygon class="panel-piece" points="0,0 160,0 190,205 0,245"/><text class="panel-label" x="87.5" y="64.5">フルエール</text><text class="panel-count" id="p0" x="87.5" y="117.5">—</text><text class="panel-goal" x="87.5" y="144.5">/ 100</text></g><g id="panel1"><polygon class="panel-piece" points="160,0 345,0 365,260 190,205"/><text class="panel-label" x="265.0" y="68.25">ゲーム好きな人</text><text class="panel-count" id="p1" x="265.0" y="121.25">—</text><text class="panel-goal" x="265.0" y="148.25">/ 50</text></g><g id="panel5"><polygon class="panel-piece" points="345,0 540,0 540,220 365,260"/><text class="panel-label" x="447.5" y="72.0">スコアロック</text><text class="panel-count" id="p5" x="447.5" y="125.0">—</text><text class="panel-goal" x="447.5" y="152.0">/ 1</text></g><g id="panel2"><polygon class="panel-piece" points="0,245 190,205 165,535 0,505"/><text class="panel-label" x="88.75" y="324.5">ランダム</text><text class="panel-label" x="88.75" y="351.5">スターベイビー</text><text class="panel-label" x="88.75" y="378.5">（小）</text><text class="panel-count" id="p2" x="88.75" y="431.5">—</text><text class="panel-goal" x="88.75" y="458.5">/ 500</text></g><g id="panelAll"><polygon class="panel-piece" points="190,205 365,260 340,485 165,535"/><text class="panel-label" x="265.0" y="363.25">全達成</text><text class="panel-goal" x="265.0" y="401.25">8項目クリア</text></g><g id="panel3"><polygon class="panel-piece" points="365,260 540,220 540,525 340,485"/><text class="panel-label" x="446.25" y="324.5">ランダム</text><text class="panel-label" x="446.25" y="351.5">スターベイビー</text><text class="panel-label" x="446.25" y="378.5">（中）</text><text class="panel-count" id="p3" x="446.25" y="431.5">—</text><text class="panel-goal" x="446.25" y="458.5">/ 150</text></g><g id="panel4"><polygon class="panel-piece" points="0,505 165,535 185,780 0,780"/><text class="panel-label" x="87.5" y="602.0">プチ</text><text class="panel-label" x="87.5" y="629.0">スターベイビー</text><text class="panel-count" id="p4" x="87.5" y="682.0">—</text><text class="panel-goal" x="87.5" y="709.0">/ 500</text></g><g id="panel6"><polygon class="panel-piece" points="165,535 340,485 360,780 185,780"/><text class="panel-label" x="262.5" y="597.0">ランダム</text><text class="panel-label" x="262.5" y="624.0">スターベイビー</text><text class="panel-label" x="262.5" y="651.0">（大）</text><text class="panel-count" id="p6" x="262.5" y="704.0">—</text><text class="panel-goal" x="262.5" y="731.0">/ 1</text></g><g id="panel7"><polygon class="panel-piece" points="340,485 540,525 540,780 360,780"/><text class="panel-label" x="445.0" y="594.5">無料ギフト</text><text class="panel-count" id="p7" x="445.0" y="647.5">—</text><text class="panel-goal" x="445.0" y="674.5">/ 100</text></g></svg></div>
 <p id="notice">接続中…</p>
 </main>
 <script src="firebase-config.js"></script><script src="overlay.js"></script>

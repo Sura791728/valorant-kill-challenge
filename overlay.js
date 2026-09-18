@@ -20,7 +20,17 @@
       received = !!value; error = '';
       const number = n => Number.isFinite(n) && n >= 0 ? Math.floor(n).toLocaleString('ja-JP') : '—';
       for (const field of ['quota', 'converted']) document.getElementById(field).textContent = value ? number(value[field]) : '—';
-      for (let i = 0; i < 5; i++) document.getElementById('p' + i).textContent = value ? number(value.panels?.[i]) : '—';
+      const goals = [100, 50, 500, 150, 500, 1, 1, 100];
+      // 旧5項目の送信には新規項目を割り当てない。
+      const isNine = value?.panels && Object.keys(value.panels).length === 8;
+      const counts = goals.map((_,i) => !isNine && i >= 4 ? undefined : value?.panels?.[i]);
+      document.getElementById('panelAll').style.display = counts.every((n,i)=>Number.isFinite(n) && n >= goals[i]) ? 'none' : '';
+      for (let i = 0; i < 8; i++) {
+        const count = counts[i];
+        document.getElementById('p' + i).textContent = value ? number(count) : '—';
+        // 未受信時は全て閉じる。取り消しで目標未満に戻れば再び覆う。
+        document.getElementById('panel' + i).style.display = Number.isFinite(count) && count >= goals[i] ? 'none' : '';
+      }
       const quota = Number.isFinite(value?.quota) ? Math.max(0, value.quota) : 0;
       const converted = Number.isFinite(value?.converted) ? Math.max(0, value.converted) : 0;
       const percent = quota > 0 ? Math.min(100, converted / quota * 100) : 0;

@@ -10,7 +10,7 @@
       bc: s.totalBC, kills: s.totalKills, converted: s.totalConverted,
       quota: Math.floor(s.totalBC / 500),
       remaining: Math.max(0, Math.floor(s.totalBC / 500) - s.totalConverted),
-      panels: s.panelTotals.slice(0, 5),
+      panels: s.panelTotals.slice(0, 8),
       updatedAt: api.serverTimestamp()
     };
   }
