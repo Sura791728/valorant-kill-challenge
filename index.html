@@ -108,7 +108,7 @@
 <body>
 <div class="wrap">
   <h1>🎯 VALORANT キルチャレンジ計算機</h1>
-  <p class="sub">17LIVEで500BPもらうごとにキルノルマ＋1。キル消化とパネル開けをまとめて管理できます。</p>
+  <p class="sub">17LIVEで500BCもらうごとにキルノルマ＋1。キル消化とパネル開けをまとめて管理できます。</p>
 
   <div class="undo-bar">
     <button id="undoBtn" onclick="undo()" disabled>↩ 元に戻す</button>
@@ -143,22 +143,22 @@
           <div class="gift-box">
             <div class="gift-label">小 <strong>170BC</strong></div>
             <input id="giftSmallQty" type="number" min="1" value="1" inputmode="numeric">
-            <button type="button" onclick="addGiftQuantity(170, 'giftSmallQty')">小をまとめて加算</button>
+            <button type="button" onclick="addGiftQuantity(170, 'giftSmallQty')">小：BC＋パネルを加算</button>
           </div>
 
           <div class="gift-box">
             <div class="gift-label">中 <strong>3,000BC</strong></div>
             <input id="giftMediumQty" type="number" min="1" value="1" inputmode="numeric">
-            <button type="button" onclick="addGiftQuantity(3000, 'giftMediumQty')">中をまとめて加算</button>
+            <button type="button" onclick="addGiftQuantity(3000, 'giftMediumQty')">中：BC＋パネルを加算</button>
           </div>
 
           <div class="gift-box">
             <div class="gift-label">大 <strong>25,000BC</strong></div>
             <input id="giftLargeQty" type="number" min="1" value="1" inputmode="numeric">
-            <button type="button" onclick="addGiftQuantity(25000, 'giftLargeQty')">大をまとめて加算</button>
+            <button type="button" onclick="addGiftQuantity(25000, 'giftLargeQty')">大：BC＋パネルを加算</button>
           </div>
         </div>
-        <p class="note">ランダムスターベイビーの個数を入力して、まとめてBCへ加算できます。その他のギフトは下の入力欄から加算できます。</p>
+        <p class="note">小・中・大は、BCと該当パネルの個数を同時に加算します。パネル欄で同じギフトを再加算する必要はありません。取り消しも両方まとめて戻ります。その他のギフトは下のBC入力欄を使ってください。</p>
       </div>
 
       <label>その他のギフト・任意のBC</label>
@@ -241,7 +241,7 @@
       <h2>🎁 パネル開け管理</h2>
       <p class="sub" style="margin-bottom:12px">各項目ごとに「貰った数」だけを管理できます。</p>
 
-<p class="note">8項目が目標に達すると、9枚目の「全達成」も自動で開きます。</p><p id="allPanelStatus" role="status"></p><p id="legacyPanelNote" class="note" hidden></p>
+<p class="note">8項目が目標に達すると、9枚目の「全達成」も自動で開きます。小・中・大のギフトボタンを使った分は反映済みです。以下の追加欄は個数だけの追加・補正用です。</p><p id="allPanelStatus" role="status"></p><p id="legacyPanelNote" class="note" hidden></p>
 <div class="panel-list"><div class="panel-row"><div class="panel-name">フルエール<span>100個</span></div><input id="r0" aria-label="フルエールの追加数" type="number" min="0" step="1" inputmode="numeric" value="0"><div class="panel-total">現在の数 <b id="u0">0</b></div></div>
 <div class="panel-row"><div class="panel-name">ゲーム好きな人<span>50人</span></div><input id="r1" aria-label="ゲーム好きな人の追加数" type="number" min="0" step="1" inputmode="numeric" value="0"><div class="panel-total">現在の数 <b id="u1">0</b></div></div>
 <div class="panel-row"><div class="panel-name">スコアロック<span>1回</span></div><input id="r5" aria-label="スコアロックの追加数" type="number" min="0" step="1" inputmode="numeric" value="0"><div class="panel-total">現在の数 <b id="u5">0</b></div></div>
@@ -467,17 +467,31 @@ function addGiftBC(amount){
 
 function addGiftQuantity(unitBC, inputId){
   const input = document.getElementById(inputId);
-  const qty = Math.max(0, parseInt(input.value)||0);
-  if(qty <= 0) return;
+  const qty = Number(input.value);
+  const gift = {
+    giftSmallQty: {bc:170, panel:2},
+    giftMediumQty: {bc:3000, panel:3},
+    giftLargeQty: {bc:25000, panel:6}
+  }[inputId];
+  if(!gift || unitBC !== gift.bc || !Number.isSafeInteger(qty) || qty <= 0){
+    alert("個数は1以上の整数で入力してください。");
+    return;
+  }
+  const nextBC = totalBC + gift.bc * qty;
+  const nextPanel = panelReceived[gift.panel] + qty;
+  if(!Number.isSafeInteger(nextBC) || !Number.isSafeInteger(nextPanel)){
+    alert("個数が大きすぎます。");
+    return;
+  }
   commitPendingEdit();
   pushHistory(getState());
-
-  totalBC += unitBC * qty;
-  saveData();
+  totalBC = nextBC;
+  panelReceived[gift.panel] = nextPanel;
+  input.value = 1;
   calculate();
   calculateParty();
-
-  input.value = 1;
+  renderPanels();
+  saveData();
 }
 
 function addBP(){
