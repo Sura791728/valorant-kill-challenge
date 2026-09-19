@@ -116,10 +116,10 @@
     <span id="historyStatus" class="history-note">操作履歴はありません</span>
   </div>
 
-  <section class="card" style="margin:20px 0">
+  <section id="syncSection" class="card" style="margin:20px 0">
 <h2>📡 OBSと同期</h2>
-<p>このiPhoneの数値を配信画面へ送ります。ページを開き直したら同期を開始してください。</p>
-<button id="syncStart" type="button">現在の数値で同期を開始</button>
+<p>操作前に同期を開始してください。接続時はクラウドの最新値を読み込み、以後は変更した分だけ同期します。</p>
+<button id="syncStart" type="button">同期を開始・最新値を取得</button>
 <p id="syncStatus" role="status">未接続：計算内容はこの端末に保存されます</p>
 <div id="obsLinkArea" hidden>
 <label for="obsUrl">OBSの「ブラウザ」に設定するURL</label>
@@ -127,8 +127,29 @@
 <label for="obsView">OBSに表示するもの</label>
 <select id="obsView"><option value="all">ゲージとパネル</option><option value="gauge">キルゲージのみ（900×170）</option><option value="panels">パネルのみ（540×780）</option></select>
 <button id="copyObsUrl" type="button">OBS用URLをコピー</button>
-<p class="note">同期済みを確認してから17LIVEへ切り替えてください。操作はこの端末・同じブラウザで行ってください。</p>
+<p class="note">同期済みを確認してから17LIVEへ切り替えてください。PCの加算もこの画面に反映されます。再接続時はクラウドの値を優先し、通常の「元に戻す」履歴をクリアします。</p>
 </div></section>
+
+<section id="autoSection" class="card" style="margin:20px 0" hidden>
+<h2>🎁 ギフト自動加算の準備</h2>
+<p id="autoState" role="status">受付OFF ／ 17LIVEの自動検出は未接続</p>
+<p class="note">今回は操作画面と同期の準備版です。「受付開始」だけでは17LIVEからギフトを取得しません。検出機能は後日接続します。</p>
+<button id="autoStart" type="button">自動加算の受付開始</button>
+<button id="autoStop" type="button">受付停止</button>
+<details><summary>動作確認</summary>
+<p>テストでも合計値とOBS表示が変わります。確認後は受信履歴から取り消してください。</p>
+<button id="giftTest" type="button">テスト：小1個を受信</button>
+</details>
+<h3>受信履歴（最新50件）</h3><div id="giftHistory" aria-live="polite">受信履歴はまだありません。</div>
+<details><summary>PCの接続設定（後日で大丈夫です）</summary>
+<p id="pairedState">PC未登録</p>
+<p>PCで下のURLを開き、表示された接続IDをこのiPhoneに入力してください。登録したPCには数値の編集権限が付きます。</p>
+<input id="receiverUrl" readonly style="width:100%" aria-label="PC準備画面のURL"><button id="copyReceiverUrl" type="button">PC用URLをコピー</button>
+<label for="pcUid">PCの接続ID</label><input id="pcUid" autocomplete="off" style="width:100%">
+<button id="pairPC" type="button">このPCを登録</button><button id="unpairPC" type="button">PCの登録を解除</button>
+</details>
+<details><summary>送信エラー時</summary><p>まず上の再試行を押してください。未送信操作を取り消すと、サーバーで確定済みの値に戻ります。</p><button id="discardPending" type="button">未送信操作を取り消す</button></details>
+</section>
 <div class="grid">
     <section class="card">
       <h2>🎮 17LIVE キルチャレ計算</h2>
@@ -586,6 +607,8 @@ renderPanels();
 updateHistoryButtons();
 </script>
 <script src="firebase-config.js"></script>
-<script src="sync.js"></script>
+<script src="sync-core.js?v=3"></script>
+<script src="sync-client.js?v=3"></script>
+<script src="sync.js?v=3"></script>
 </body>
 </html>

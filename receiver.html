@@ -1,0 +1,8 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PCギフト受信の準備</title>
+<style>body{font-family:system-ui,sans-serif;background:#101523;color:#f7f4fa;margin:0;padding:24px}main{max-width:760px;margin:auto}section{background:#1c2435;border:1px solid #3e475c;border-radius:18px;padding:22px;margin:18px 0}button{background:#f74786;color:white;border:0;border-radius:10px;padding:14px;margin:6px;cursor:pointer}button:disabled{opacity:.45}input{box-sizing:border-box;width:100%;padding:12px;background:#101523;color:white;border:1px solid #69738b;border-radius:8px}p{line-height:1.7}.receipt{border-top:1px solid #586176;padding:12px 0}</style>
+<main><h1>PCギフト受信の準備</h1><p>17LIVEの自動検出はまだ接続していません。この画面ではPC登録と同期の動作確認ができます。</p>
+<section><button id="connect">接続IDを表示・接続する</button><p id="status" role="status">未接続</p><label for="uid">このPCの接続ID</label><input id="uid" readonly><p>このIDをiPhoneの「PCの接続設定」に入力して登録してください。</p></section>
+<section id="actions" hidden><p id="counts"></p><p id="mode"></p><button id="start">受付開始</button><button id="stop">受付停止</button><button id="retry">未送信を再試行</button><button id="discard">未送信を取り消す</button>
+<details><summary>テスト受信</summary><p>合計値とOBS表示が実際に変わります。</p><button id="test">テスト：小1個を受信</button></details>
+<h2>受信履歴</h2><div id="history"></div></section></main>
+<script src="firebase-config.js"></script><script src="sync-core.js?v=3"></script><script src="sync-client.js?v=3"></script><script src="receiver.js?v=3"></script></html>
